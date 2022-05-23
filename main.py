@@ -9,8 +9,21 @@ import shutil
 import os
 from os import listdir
 from notify2 import EXPIRES_NEVER
+from telegram import Bot
 
 ROOT_DIR = os.path.dirname(__file__)
+DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+MY_TELEGRAM_ID = os.environ.get('MY_TELEGRAM_ID')
+bot = Bot(TELEGRAM_TOKEN)
+
+
+# Parameters for desktop notifications #
+# now = datetime.datetime.now()
+# notify2.init('💬 Discord Bot - Nouveau message !')
+
+# Définition du chemin de sauvegarde des icons
+path = f"{ROOT_DIR}/icon/"
 
 # Help text for --help command
 help_text = "This is a discord bot that is intended to retrieve the messages that the user receives and display only those whose channel is indicated in a VIP list."
@@ -24,13 +37,8 @@ parser.add_argument("-I", "--icon_update", help="Update servers icon", action="s
 # Read arguments from the command line
 args = parser.parse_args()
 
-token = os.environ.get('DISCORD_TOKEN')
-client = discord.Client()
-now = datetime.datetime.now()
-notify2.init('💬 Discord Bot - Nouveau message !')
 
-# Définition du chemin de sauvegarde des icons
-path = f"{ROOT_DIR}/icon/"
+client = discord.Client()
 
 @client.event
 async def on_ready():
@@ -101,11 +109,16 @@ async def on_ready():
                 return
             # Si le message provient d'un channel présent dans la liste triée VIP_list.csv, alors l'afficher dans la console et envoyer une notification desktop
             elif VIP_list.isin({'channel_id': [message.channel.id]}).any().any() and VIP_list.isin({'server_id': [message.guild.id]}).any().any():
-                print(now.strftime("%Y-%m-%d %H:%M:%S"), f"| {message.guild.name} | {message.channel.name} | {message.author.name}\nhttps://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}")
-                notif = notify2.Notification(f"{message.guild.name} | {message.channel.name} | {message.author.name}", f"<a href=\"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}\">lien </a>", icon=f"{path}{message.guild.id}")
-                notif.set_timeout(EXPIRES_NEVER)
-                notif.show()
-client.run(token, bot=False)
+                bot.send_messages(MY_TELEGRAM_ID, f"{message.guild.name} | {message.channel.name} | {message.author.name}\nhttps://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}")
+                
+
+                # Parameters for desktop notification
+                # print(now.strftime("%Y-%m-%d %H:%M:%S"), f"| {message.guild.name} | {message.channel.name} | {message.author.name}\nhttps://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}")
+                # notif = notify2.Notification(f"{message.guild.name} | {message.channel.name} | {message.author.name}", f"<a href=\"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}\">lien </a>", icon=f"{path}{message.guild.id}")
+                # notif.set_timeout(EXPIRES_NEVER)
+                # notif.show()
+
+client.run(DISCORD_TOKEN, bot=False)
 
 
 
