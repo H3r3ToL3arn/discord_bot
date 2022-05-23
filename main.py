@@ -35,7 +35,7 @@ path = f"{ROOT_DIR}/icon/"
 @client.event
 async def on_ready():
     print('✅ We have logged in as {0.user}'.format(client))
-    # If user want to update the channel list    
+    # If user want to update the channels list    
     if args.get_channels:
         # Création d'une liste de dictionnaire contenant les informations pertinentes
         list_dict_csv = []
