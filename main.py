@@ -109,7 +109,7 @@ async def on_ready():
                 return
             # Si le message provient d'un channel présent dans la liste triée VIP_list.csv, alors l'afficher dans la console et envoyer une notification desktop
             elif VIP_list.isin({'channel_id': [message.channel.id]}).any().any() and VIP_list.isin({'server_id': [message.guild.id]}).any().any():
-                bot.send_messages(MY_TELEGRAM_ID, f"{message.guild.name} | {message.channel.name} | {message.author.name}\nhttps://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}")
+                bot.send_message(MY_TELEGRAM_ID, f"{message.guild.name} | {message.channel.name} | {message.author.name}\nhttps://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}")
                 
 
                 # Parameters for desktop notification
