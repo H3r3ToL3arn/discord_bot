@@ -11,7 +11,7 @@ from os import listdir
 from notify2 import EXPIRES_NEVER
 from telegram import Bot
 
-ROOT_DIR = os.path.dirname(__file__)
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 MY_TELEGRAM_ID = os.environ.get('MY_TELEGRAM_ID')
@@ -59,6 +59,7 @@ async def on_ready():
 
         # Extraction des informations dans un fichier csv via un DataFrame Panda
         output = pd.DataFrame(list_dict_csv)
+        print(f'{ROOT_DIR}/output.csv')
         output.to_csv(f'{ROOT_DIR}/output.csv')
         print("✅ Channels list succesfully updated !")
         # Stopping the program
